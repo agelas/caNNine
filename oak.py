@@ -15,7 +15,7 @@ class OakPipeline:
     def create_pipeline(self):
         labelMap = ["person", ""]
 
-        nnPathDefault = str((Path(__file__).parent / Path('./person-detection-retail-0013_openvino_2021.4_7shave.blob')).resolve().absolute())
+        nnPathDefault = str((Path(__file__).parent / Path('./person-detection-retail-0013/person-detection-retail-0013_openvino_2021.4_7shave.blob')).resolve().absolute())
         parser = argparse.ArgumentParser()
         parser.add_argument('-nnPath', help="Path to mobilenet detection network blob", default=nnPathDefault)
 
