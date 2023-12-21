@@ -2,6 +2,7 @@ from flask import Flask
 import requests
 from dotenv import load_dotenv
 import os
+from oak import OakPipeline
 
 load_dotenv()
 
@@ -16,7 +17,8 @@ def ping():
 
 @app.route('/start-camera', methods=['GET'])
 def start_camera():
-    image = "hi there"
+    image = "oak pipeline created"
+    oak_pipeline = OakPipeline(host_url, api_key)
     headers = {'Authorization': f'Bearer {api_key}'}
     response = requests.post(f'{host_url}/process-image', headers=headers, files={'image': image})
     return response.content
