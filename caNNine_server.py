@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, abort
 import requests
 from dotenv import load_dotenv
 import os
@@ -26,12 +26,12 @@ def check_edge():
 
 @app.route('/process-image', methods=['POST'])
 def process_image():
-    auth_header = requests.headers.get('Authorization')
+    auth_header = request.headers.get('Authorization')
     if auth_header != f'Bearer {api_key}':
-        Flask.abort(401)
+        abort(401)
 
-    image = requests.files['image']
-    return
+    image = request.files['image']
+    return "Processing not Implemented Yet"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
