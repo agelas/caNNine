@@ -1,0 +1,11 @@
+description: >-
+  mobilenet-ssd
+task_type: object_attributes
+files:
+  - name: mobilenet-ssd_openvino_2021.4_6shave.blob
+    size: 14499200
+    sha256: 5ae9cb636bfa40df02c2ca3e64bc68a6690abd8a147903d4580aea6b6feb9c1c
+    source: https://artifacts.luxonis.com/artifactory/luxonis-depthai-data-local/network/mobilenet-ssd_openvino_2021.4_6shave.blob
+
+framework: dldt
+license: https://raw.githubusercontent.com/openvinotoolkit/open_model_zoo/master/LICENSE
