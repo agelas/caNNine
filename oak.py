@@ -11,7 +11,8 @@ class OakPipeline:
         self.host_url = host_url
         self.headers = {'Authorization': f'Bearer {api_key}'}
         self.pipeline: dai.Pipeline = self.create_pipeline()
-        self.label_map = ["person", "dog"]
+        self.label_map = labelMap = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow",
+            "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
 
     def create_pipeline(self) -> dai.Pipeline:
         nnPathDefault = str((Path(__file__).parent / Path('./mobilenet/mobilenet-ssd_openvino_2021.4_6shave.blob')).resolve().absolute())
@@ -49,7 +50,7 @@ class OakPipeline:
         detectionNetwork.setConfidenceThreshold(0.5)
         detectionNetwork.input.setBlocking(False)
 
-        objectTracker.setDetectionLabelsToTrack([0, 1])
+        objectTracker.setDetectionLabelsToTrack([12, 15])
         objectTracker.setTrackerType(dai.TrackerType.ZERO_TERM_COLOR_HISTOGRAM)
         objectTracker.setTrackerIdAssignmentPolicy(dai.TrackerIdAssignmentPolicy.SMALLEST_ID)
 
