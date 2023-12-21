@@ -65,6 +65,8 @@ class OakPipeline:
         detectionNetwork.out.link(objectTracker.inputDetections)
         objectTracker.out.link(trackerOut.input)
 
+        return pipeline
+
     def run(self):
         labelMap = ["person", "dog"]
         with dai.Device(self.pipeline) as device:
