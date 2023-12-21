@@ -103,7 +103,7 @@ class OakPipeline:
                     cv2.putText(frame, f"{int(detection.confidence * 100)}%", (bbox[0] + 10, bbox[1] + 40), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
                 cv2.imshow(name, frame)
 
-            cap = cv2.VideoCapture(0)
+            cap = cv2.VideoCapture(-1)
             baseTs = time.monotonic()
             simulatedFps = 30
             inputFrameShape = (1920, 1080)
