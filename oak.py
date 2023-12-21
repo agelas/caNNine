@@ -11,6 +11,7 @@ class OakPipeline:
         self.host_url = host_url
         self.headers = {'Authorization': f'Bearer {api_key}'}
         self.pipeline: dai.Pipeline = self.create_pipeline()
+        self.label_map = ["person", "dog"]
 
     def create_pipeline(self) -> dai.Pipeline:
         nnPathDefault = str((Path(__file__).parent / Path('./mobilenet/mobilenet-ssd_openvino_2021.4_6shave.blob')).resolve().absolute())
@@ -67,8 +68,7 @@ class OakPipeline:
 
         return pipeline
 
-    def run(self):
-        labelMap = ["person", "dog"]
+    def run(self): 
         with dai.Device(self.pipeline) as device:
             preview = device.getOutputQueue("preview", 4, False)
             tracklets = device.getOutputQueue("tracklets", 4, False)
@@ -100,7 +100,7 @@ class OakPipeline:
                     y2 = int(roi.bottomRight().y)
 
                     try:
-                        label = labelMap[t.label]
+                        label = self.labelMap[t.label]
                     except:
                         label = t.label
 
