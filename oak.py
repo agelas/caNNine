@@ -71,9 +71,9 @@ class OakPipeline:
 
         return pipeline
 
-    def run(self, pipeline):
+    def run(self):
         labelMap = ["person", ""]
-        with dai.Device(pipeline) as device:
+        with dai.Device(self.pipeline) as device:
             qIn = device.getInputQueue(name="inFrame")
             trackerFrameQ = device.getOutputQueue(name="trackerFrame", maxSize=4)
             tracklets = device.getOutputQueue(name="tracklets", maxSize=4)
