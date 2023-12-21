@@ -10,9 +10,9 @@ class OakPipeline:
     def __init__(self, host_url, api_key):
         self.host_url = host_url
         self.headers = {'Authorization': f'Bearer {api_key}'}
-        self.pipeline = self.create_pipeline()
+        self.pipeline: dai.Pipeline = self.create_pipeline()
 
-    def create_pipeline(self):
+    def create_pipeline(self) -> dai.Pipeline:
         nnPathDefault = str((Path(__file__).parent / Path('./mobilenet/mobilenet-ssd_openvino_2021.4_6shave.blob')).resolve().absolute())
         parser = argparse.ArgumentParser()
         parser.add_argument('-nnPath', help="Path to mobilenet detection network blob", default=nnPathDefault)
