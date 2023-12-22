@@ -31,7 +31,17 @@ def process_image():
         abort(401)
 
     image = request.files['image']
-    return "Processing not Implemented Yet"
+    if image:
+        images_dir = os.path.join(os.path.dirname(__file__), 'images')
+        if not os.path.exists(images_dir):
+            os.makedirs(images_dir)
+        
+        image_path = os.path.join(images_dir, image.filename)
+        image.save(image_path)
+
+        return f"Image saved to {image_path}"
+    else:
+        return "No image found in request"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
