@@ -32,7 +32,7 @@ def process_image():
 
     image = request.files['image']
     if image:
-        images_dir = os.path.join(os.path.dirname(__file__), 'images')
+        images_dir = os.path.join(os.path.dirname(__file__), 'captured_images')
         if not os.path.exists(images_dir):
             os.makedirs(images_dir)
         
