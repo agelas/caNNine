@@ -11,7 +11,7 @@ class OakPipeline:
         self.host_url = host_url
         self.headers = {'Authorization': f'Bearer {api_key}'}
         self.pipeline: dai.Pipeline = self.create_pipeline()
-        self.label_map = labelMap = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow",
+        self.label_map = ["background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow",
             "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
 
     def create_pipeline(self) -> dai.Pipeline:
@@ -93,6 +93,8 @@ class OakPipeline:
                 color = (255, 0, 0)
                 frame = imgFrame.getCvFrame()
                 trackletsData = track.tracklets
+                if(trackletsData.len() > 1):
+                    self.send_image(frame)
                 for t in trackletsData:
                     roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
                     x1 = int(roi.topLeft().x)
@@ -117,8 +119,14 @@ class OakPipeline:
                 if cv2.waitKey(1) == ord('q'):
                     break
         
-
+    
     def send_image(self, image):
-        response = requests.post(f'{self.host_url}/process-image', headers=self.headers, files={'image': image})
-        return response.content
+        retval, buffer = cv2.imencode('.jpg', image)
+        if retval:
+            image_bytes = np.array(buffer).tobytes()
+            response = requests.post(f'{self.host_url}/process-image', headers=self.headers, files={'image': ('image.jpg', image_bytes, 'image/jpeg')})
+            return response.content
+        else:
+            print("Failed to encode image")
+            return None
 
