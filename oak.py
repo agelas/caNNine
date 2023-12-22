@@ -78,6 +78,7 @@ class OakPipeline:
             counter = 0
             fps = 0
             frame = None
+            last_capture_time = 0
 
             while(True):
                 imgFrame = preview.get()
@@ -93,8 +94,11 @@ class OakPipeline:
                 color = (255, 0, 0)
                 frame = imgFrame.getCvFrame()
                 trackletsData = track.tracklets
-                if(trackletsData.len() > 1):
-                    self.send_image(frame)
+                # Check for tracklets and capture every 5 seconds
+                if trackletsData and current_time - last_capture_time > 5:
+                    filename = f"image_{str(current_time)}.jpg"
+                    self.send_image(frame, filename)
+                    last_capture_time = current_time
                 for t in trackletsData:
                     roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
                     x1 = int(roi.topLeft().x)
@@ -120,11 +124,11 @@ class OakPipeline:
                     break
         
     
-    def send_image(self, image):
+    def send_image(self, image, filename):
         retval, buffer = cv2.imencode('.jpg', image)
         if retval:
             image_bytes = np.array(buffer).tobytes()
-            response = requests.post(f'{self.host_url}/process-image', headers=self.headers, files={'image': ('image.jpg', image_bytes, 'image/jpeg')})
+            response = requests.post(f'{self.host_url}/process-image', headers=self.headers, files={'image': (filename, image_bytes, 'image/jpeg')})
             return response.content
         else:
             print("Failed to encode image")
