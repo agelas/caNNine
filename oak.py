@@ -107,7 +107,7 @@ class OakPipeline:
                     y2 = int(roi.bottomRight().y)
 
                     try:
-                        label = self.labelMap[t.label]
+                        label = self.label_map[t.label]
                     except:
                         label = t.label
 
