@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 from inference import InferencePipeline
+from PIL import Image
 
 load_dotenv()
 
@@ -41,7 +42,12 @@ def process_image():
         
         image_path = os.path.join(images_dir, image.filename)
         image.save(image_path)
-        inference_pipeline.classify_image(image)
+        with open(image_path, 'rb') as img:
+            img_to_classify = Image.open(img)
+            final_class, final_prob = inference_pipeline.classify_image(img_to_classify)
+            classification_info = f"Classified as: {final_class}, Confidence: {final_prob:.2f}"
+            print(classification_info)
+
         return f"Image saved to {image_path}"
     else:
         return "No image found in request"
