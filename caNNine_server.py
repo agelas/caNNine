@@ -2,8 +2,11 @@ from flask import Flask, request, abort
 import requests
 from dotenv import load_dotenv
 import os
+from inference import InferencePipeline
 
 load_dotenv()
+
+inference_pipeline = InferencePipeline('trained_model.pt')
 
 app = Flask(__name__)
 raspberry_pi_url = os.getenv("RASPBERRY_PI_URL")
@@ -38,7 +41,7 @@ def process_image():
         
         image_path = os.path.join(images_dir, image.filename)
         image.save(image_path)
-
+        inference_pipeline.classify_image(image)
         return f"Image saved to {image_path}"
     else:
         return "No image found in request"
