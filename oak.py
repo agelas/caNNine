@@ -69,7 +69,7 @@ class OakPipeline:
 
         return pipeline
 
-    def run(self): 
+    def run(self, headless: bool): 
         with dai.Device(self.pipeline) as device:
             preview = device.getOutputQueue("preview", 4, False)
             tracklets = device.getOutputQueue("tracklets", 4, False)
@@ -99,26 +99,27 @@ class OakPipeline:
                     filename = f"image_{str(current_time)}.jpg"
                     self.send_image(frame, filename)
                     last_capture_time = current_time
-                for t in trackletsData:
-                    roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
-                    x1 = int(roi.topLeft().x)
-                    y1 = int(roi.topLeft().y)
-                    x2 = int(roi.bottomRight().x)
-                    y2 = int(roi.bottomRight().y)
+                if not headless:
+                    for t in trackletsData:
+                        roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
+                        x1 = int(roi.topLeft().x)
+                        y1 = int(roi.topLeft().y)
+                        x2 = int(roi.bottomRight().x)
+                        y2 = int(roi.bottomRight().y)
 
-                    try:
-                        label = self.label_map[t.label]
-                    except:
-                        label = t.label
+                        try:
+                            label = self.label_map[t.label]
+                        except:
+                            label = t.label
 
-                    cv2.putText(frame, str(label), (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-                    cv2.putText(frame, f"ID: {[t.id]}", (x1 + 10, y1 + 35), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-                    cv2.putText(frame, t.status.name, (x1 + 10, y1 + 50), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
+                        cv2.putText(frame, str(label), (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                        cv2.putText(frame, f"ID: {[t.id]}", (x1 + 10, y1 + 35), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                        cv2.putText(frame, t.status.name, (x1 + 10, y1 + 50), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                        cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
 
-                cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
+                    cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
 
-                cv2.imshow("tracker", frame)
+                    cv2.imshow("tracker", frame)
 
                 if cv2.waitKey(1) == ord('q'):
                     break

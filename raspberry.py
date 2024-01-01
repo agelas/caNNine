@@ -19,7 +19,7 @@ def ping():
 def start_camera():
     image = "oak pipeline created"
     oak_pipeline = OakPipeline(host_url, api_key)
-    oak_pipeline.run()
+    oak_pipeline.run(headless=True)
     headers = {'Authorization': f'Bearer {api_key}'}
     response = requests.post(f'{host_url}/process-image', headers=headers, files={'image': image})
     return response.content
