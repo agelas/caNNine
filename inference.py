@@ -1,15 +1,38 @@
 import torch
+import torch.nn as nn
 import torchvision.transforms as transforms
 from torchvision.models import resnet18, ResNet18_Weights
 from PIL import Image
 
+class CannineModel(nn.Module):
+    def __init__(self, num_classes):
+        super(CannineModel, self).__init__()
+        self.base_model = resnet18(weights = ResNet18_Weights.DEFAULT)
+        self.base_model = nn.Sequential(*list(self.base_model.children())[:-3])
+        self.pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.flatten = nn.Flatten()
+
+        self.classifier = nn.Sequential(
+            nn.Linear(256, 512),
+            nn.BatchNorm1d(512),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes)
+        )
+
+    def forward(self, x):
+        x = self.base_model(x)
+        x = self.pool(x)
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x
 class InferencePipeline:
     def __init__(self, fine_tuned_path):
         weights_default = ResNet18_Weights.DEFAULT
         resnet_base = resnet18(weights = weights_default)
         resnet_base.eval()
 
-        resnet_fine_tuned = resnet18(weights=None)
+        resnet_fine_tuned = CannineModel(4)
         resnet_fine_tuned.load_state_dict(torch.load(fine_tuned_path, map_location = torch.device('cpu')))
         resnet_fine_tuned.eval()
 

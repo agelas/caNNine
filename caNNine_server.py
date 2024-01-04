@@ -7,7 +7,7 @@ from PIL import Image
 
 load_dotenv()
 
-inference_pipeline = InferencePipeline('trained_model.pt')
+inference_pipeline = InferencePipeline('trained_caNNine.pt')
 
 app = Flask(__name__)
 raspberry_pi_url = os.getenv("RASPBERRY_PI_URL")
