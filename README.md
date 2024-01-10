@@ -18,7 +18,7 @@ A lot of people walk some very friendly dogs past my house throughout the day. U
 The first part of the system uses a [Luxonis Oak-1 Lite](https://shop.luxonis.com/collections/oak-cameras-1/products/oak-1-lite?variant=42583148069087) camera running MobileNet SSD for detecting and tracking people and their dogs. Since the resolution isn't that great, these images are forwarded via ethernet cable to the second part of caNNine, which is a finetuned ResNet-18 model running locally, that can much more reliably categorize the dog as one worth dropping everything and going outside to pet, or not. The Luxonis camera is powered by a Raspberry Pi 4 (which in turn is powered by power over ethernet). Two small Flask apps handle requests and data transfer between the Raspberry Pi and the main computer.
 
 ### Software Setup
-On the main computer, both `caNNine_server.py` and `caNNine.py` need to be running (in that order). The former serves as an intermediary server that handles requests from `caNNine.py` and forwards them to `raspberry.py`. The `caNNine.py` program acts as the primary controller that initiates and checks the status of the Raspberry Pi and the camera.
+On the main computer, both `caNNine_server.py` and `caNNine.py` need to be running (started in that order). The former serves as an intermediary server that handles requests from `caNNine.py` and forwards them to `raspberry.py`. The `caNNine.py` program acts as the primary controller that initiates and checks the status of the Raspberry Pi and the camera.
 
 Since the Raspberry Pi is running in a headless state, it's easiest to ssh into it and start `raspberry.py` remotely. `raspberry.py` is responsible for responding to requests from `cannine_server.py` and controlling the Oak camera.
 ``` python
@@ -38,3 +38,11 @@ cannine.py (Main Computer)
       |                                   |
       |<--(Response: Image Processing Info) 
 ```
+
+# Results
+
+<p align="center">
+  <img src="docs/results3.JPG" alt="Very Happy Samoyed" width="100"/>
+  <img src="docs/results1.jpg" alt="Dogs" width="100"/>
+  <img src="docs/results2.JPG" alt="Happy Samoyed" width="100"/>
+</p>
